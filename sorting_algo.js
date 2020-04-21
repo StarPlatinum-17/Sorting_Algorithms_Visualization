@@ -8,17 +8,20 @@ const CANVAS_HEIGHT = 400
 var NUM_ELEMENTS = 112
 
 let i = 0;
+var _elements = [];
+
 
 function setup(){
     let cnv = createCanvas(CANVAS_LENGTH, CANVAS_HEIGHT);
     cnv.parent("sketch");
-    //centerCanvas();
     background(BACKGROUND_FILL);
-    var _elements
-    generate_array()
+    generate_array();
+    frameRate(10);
 }
 
+//Visualization
 function draw(){
+    console.log(_elements)
     if (Array.isArray(_elements) && _elements.length){
         background(BACKGROUND_FILL);
         
@@ -35,11 +38,14 @@ function draw(){
     }
 }
 
+
+//Functionality
 function generate_array(){
     _elements = Array(NUM_ELEMENTS)
     
     for (let i = 0; i < _elements.length; i++){
-        _elements[i] = random(20,height);
+        var _rand = Math.random()
+        _elements[i] = _rand*(CANVAS_HEIGHT) + 20*(1-_rand);
     }
 }
 
