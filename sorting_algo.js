@@ -7,8 +7,28 @@ const CANVAS_LENGTH = 1201;
 const CANVAS_HEIGHT = 400;
 
 var NUM_ELEMENTS = 112;
-_states = _elements = []
-let i = 0;
+
+
+//Visualized_array class
+class Visualized_Array{   
+    constructor(elements = []){
+        this.elements = elements;
+        this.states = Array(this.elements.length).fill(0);
+    }
+
+    generate_array(num_elements, max_value){
+        this.elements = Array(num_elements)
+        this.states = Array(num_elements).fill(0)
+    
+
+        for (let i = 0; i < this.elements.length; i++){
+            var _rand = Math.random()
+            this.elements[i] = _rand*(max_value) + 20*(1-_rand);
+        }
+    }
+}
+
+_visualized_array = new Visualized_Array([])
 
 function setup(){
     let cnv = createCanvas(CANVAS_LENGTH, CANVAS_HEIGHT);
@@ -20,7 +40,10 @@ function setup(){
 //Visualization
 function draw(){
     background(BACKGROUND_FILL);
-        
+
+    let _elements = _visualized_array.elements
+    let _states = _visualized_array.states
+
     w = width/(_elements.length + 1)
     m = (width - w * _elements.length) / 2
         
@@ -33,31 +56,23 @@ function draw(){
         } else{
             fill(DEFAULT_FILL);
         }
-            
-
 
         rect(i * w + m, height - _elements[i], w, height);
-   
     }
 
 }
 
 //buttons
 function trigger_QuickSort(){
-    QuickSort(_elements,0,_elements.length-1);
-    verify_sorted(_elements);
+    let elements = _visualized_array.elements
+    QuickSort(elements,0,elements.length-1);
+    verify_sorted(_visualized_array.elements);
 }
 
 
 //Functionality
 function generate_array(){
-    _elements = Array(NUM_ELEMENTS)
-    _states = Array(NUM_ELEMENTS).fill(0)
-    
-    for (let i = 0; i < _elements.length; i++){
-        _rand = Math.random()
-        _elements[i] = _rand*(CANVAS_HEIGHT) + 20*(1-_rand);
-    }
+    _visualized_array.generate_array(NUM_ELEMENTS, CANVAS_HEIGHT)
 }
 
 function sleep(ms) {
@@ -74,11 +89,8 @@ function verify_sorted(arr) {
             
             break;
         } else{
-            _states[i-1] = 1;
-
         }
     }
-    _states[arr.length-1    ] = 1;
     return is_sorted;
 }
 
