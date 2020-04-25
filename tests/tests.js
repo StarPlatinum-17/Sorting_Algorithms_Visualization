@@ -1,21 +1,9 @@
 console.log('qunit tests start');
 
-QUnit.test("Check Visualized_Array default constructor", function(assert){
-    var visualized_array = new Visualized_Array();
 
-    assert.equal(visualized_array.elements.length,0,"elements length is 0");
-    assert.equal(visualized_array.states.length,0,"states length is 0");
-
-});
-
-QUnit.test("Check Visualized_Array generate_array", function(assert){
-    var visualized_array = new Visualized_Array();
-    var num_elements = 21;
-
-    visualized_array.generate_array(num_elements)
-
-    assert.equal(visualized_array.elements.length,num_elements,"Created elements of known length");
-    assert.equal(visualized_array.states.length,num_elements,"Created states of known length");
+QUnit.test("Generate Array Length Test", function(assert){
+    generate_array();
+    assert.equal(_elements.length,NUM_ELEMENTS);
 });
 
 QUnit.test("Check sorted arrays", function(assert){

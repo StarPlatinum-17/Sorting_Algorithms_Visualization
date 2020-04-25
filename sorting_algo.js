@@ -1,34 +1,15 @@
 const BACKGROUND_FILL = 50;
 const COMPARE_FILL = '#8B0000';
 const DEFAULT_FILL = 255;
-const SORTED_FILL = '#99ff33';
 
 const CANVAS_LENGTH = 1201;
 const CANVAS_HEIGHT = 400;
 
 var NUM_ELEMENTS = 112;
 
+_elements = _states = [];
 
-//Visualized_array class
-class Visualized_Array{   
-    constructor(elements = []){
-        this.elements = elements;
-        this.states = Array(this.elements.length).fill(0);
-    }
-
-    generate_array(num_elements, max_value){
-        this.elements = Array(num_elements)
-        this.states = Array(num_elements).fill(0)
-    
-
-        for (let i = 0; i < this.elements.length; i++){
-            var _rand = Math.random()
-            this.elements[i] = _rand*(max_value) + 20*(1-_rand);
-        }
-    }
-}
-
-_visualized_array = new Visualized_Array([])
+let i = 0;
 
 function setup(){
     let cnv = createCanvas(CANVAS_LENGTH, CANVAS_HEIGHT);
@@ -39,10 +20,9 @@ function setup(){
 
 //Visualization
 function draw(){
+
     background(BACKGROUND_FILL);
 
-    let _elements = _visualized_array.elements
-    let _states = _visualized_array.states
 
     w = width/(_elements.length + 1)
     m = (width - w * _elements.length) / 2
@@ -58,21 +38,24 @@ function draw(){
         }
 
         rect(i * w + m, height - _elements[i], w, height);
-    }
 
+    }
 }
 
 //buttons
 function trigger_QuickSort(){
-    let elements = _visualized_array.elements
-    QuickSort(elements,0,elements.length-1);
-    verify_sorted(_visualized_array.elements);
+    QuickSort(_elements,0,_elements.length-1);
 }
 
 
 //Functionality
 function generate_array(){
-    _visualized_array.generate_array(NUM_ELEMENTS, CANVAS_HEIGHT)
+    _elements = Array(NUM_ELEMENTS)
+    
+    for (let i = 0; i < _elements.length; i++){
+        _rand = Math.random()
+        _elements[i] = _rand*(CANVAS_HEIGHT) + 20*(1-_rand);
+    }
 }
 
 function sleep(ms) {
@@ -81,15 +64,12 @@ function sleep(ms) {
 
 function verify_sorted(arr) {
     var is_sorted = true;
-    
+
     for (let i = 1; i < arr.length; i++){
         if (arr[i-1] > arr[i]){
-
             is_sorted = false;
-            
             break;
-        } else{
-        }
+        } 
     }
     return is_sorted;
 }
