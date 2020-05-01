@@ -20,6 +20,7 @@ class VisualizedArray extends Array {
         this.states = Array(num_elements).fill(0);
         this.delay = 0;
     }
+
     isEmpty() {
         return this.length === 0;
     }
@@ -51,12 +52,23 @@ class VisualizedArray extends Array {
         this.states[j] = tmp;
     }
 
+    fill_random(start_index,end_index,max_value){
+        for (let i = start_index; i < end_index ; i++){
+            let _rand = Math.random();
+            _visualized_array[i] = _rand*(max_value) + 20*(1-_rand);
+        }
+
+    }
+
+    set_delay(){
+        let tmp = this.length;
+        this.delay = floor(50000/(tmp*Math.log2(tmp)));
+    }
     
 
   }
 
 var _visualized_array = new VisualizedArray(0);
-var _2nd_vsi_array = new VisualizedArray(0);
 
 
 //Visualization
@@ -70,6 +82,7 @@ function setup(){
 
 function draw(){
     background(BACKGROUND_FILL);
+    
 
     let elements = _visualized_array;
     let states = _visualized_array.states;
@@ -110,19 +123,34 @@ function trigger_MergeSort(){
     MergeSort(_visualized_array,0,_visualized_array.length-1);
 }
 
+async function update_num_elements(new_value){
+    _visualized_array.set_delay(0);
+    await sleep(100);
+    NUM_ELEMENTS = parseInt(new_value);
+    
+    if(new_value <= _visualized_array.length){
+        _visualized_array = _visualized_array.splice(0,new_value);
+
+    } else{
+        var old_value = _visualized_array.length;
+
+        _visualized_array = _visualized_array.splice(0,old_value);
+        _visualized_array.fill_random(old_value,new_value,CANVAS_HEIGHT);
+
+    }
+    _visualized_array.set_delay();
+    
+}
+
 
 //Functionality
 function generate_array(num_elements = NUM_ELEMENTS, max_value = CANVAS_HEIGHT){
+    
     _visualized_array.delay = 0;
-    sleep(_visualized_array.delay);
     _visualized_array = new VisualizedArray(num_elements);
-    _visualized_array.delay = BEAT_MS;
 
-
-    for (let i = 0; i < _visualized_array.length; i++){
-        _rand = Math.random();
-        _visualized_array[i] = _rand*(max_value) + 20*(1-_rand);
-    }
+    _visualized_array.fill_random(0,_visualized_array.length, max_value);
+    _visualized_array.set_delay();
 }
 
 function verify_sorted(arr) {
@@ -242,4 +270,6 @@ async function MergeSort(arr,start,end){
 
 
 }
+
+
 
