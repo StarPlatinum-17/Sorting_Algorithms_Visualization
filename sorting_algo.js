@@ -10,7 +10,7 @@ const BEAT_MS = 10;
 const CANVAS_LENGTH = 1201;
 const CANVAS_HEIGHT = 400;
 
-var NUM_ELEMENTS = 600;
+var NUM_ELEMENTS = 500;
 
 //VisualizedArray class
 class VisualizedArray extends Array {
@@ -28,6 +28,12 @@ class VisualizedArray extends Array {
         for (let i = 0 ; i < indexes.length; i++){
             let j=indexes[i];
             this.states[j] = value;
+        }
+    }
+
+    set_states_range(start,end, value){
+        for (let i = start ; i < end; i++){
+            this.states[i] = value;
         }
     }
 
@@ -100,11 +106,18 @@ function trigger_QuickSort(){
     QuickSort(_visualized_array,0,_visualized_array.length-1);
 }
 
+function trigger_MergeSort(){
+    MergeSort(_visualized_array,0,_visualized_array.length-1);
+}
+
 
 //Functionality
 function generate_array(num_elements = NUM_ELEMENTS, max_value = CANVAS_HEIGHT){
+    _visualized_array.delay = 0;
+    sleep(_visualized_array.delay);
     _visualized_array = new VisualizedArray(num_elements);
     _visualized_array.delay = BEAT_MS;
+
 
     for (let i = 0; i < _visualized_array.length; i++){
         _rand = Math.random();
@@ -177,5 +190,56 @@ async function QuickSort(arr, start, end){
         ])
 
     }
+}
+
+
+async function ms_merge(arr,start,midpoint,end){
+    var Left = arr.slice(start,midpoint+1);
+    var Right = arr.slice(midpoint+1,end+1);
+    
+    arr.set_states_range(start,midpoint+1,3);
+    arr.set_states_range(midpoint+1,end+1,4);
+    await sleep(arr.delay);
+    for (let i = end; i > start; i--){
+        var left_compare_idx = start + max(0,Left.length-1)
+
+        arr.set_states([i,left_compare_idx],2);
+        await sleep(arr.delay);
+
+        if (Right.length==0 || (Left[Left.length-1] > Right[Right.length-1])){
+            arr.set_states([left_compare_idx],4);
+
+            arr[i] = Left.pop();  
+            arr.splice(i - Right.length,Right.length,...Right);
+            
+        } else{
+            arr.set_states([left_compare_idx],3);
+            arr[i] = Right.pop();
+        }   
+        arr.set_states([i],1);
+        await sleep(arr.delay);
+
+    }
+
+
+    arr.set_states([start],1);
+    await sleep(arr.delay);
+}
+
+async function MergeSort(arr,start,end){
+    
+    if (start < end){
+        let midpoint = Math.floor((start+end)/2);
+        
+        await Promise.all([
+        MergeSort(arr,start,midpoint),
+        MergeSort(arr,midpoint+1,end)
+        ])
+
+        await ms_merge(arr,start,midpoint,end);
+
+    } 
+
+
 }
 
