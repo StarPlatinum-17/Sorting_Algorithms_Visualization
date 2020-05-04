@@ -16,29 +16,28 @@
 
     <body class="container">
     
-        <div id="sketch" class="row justify-content-md-center">
-            <div id="sketch" class="col-md-12">
-                <script src="sorting_algo.js"></script>
-            </div>
-        </div>
+
         
-        <div id="button_bar" class="row justify-content-md-center">
+        <div id="button_bar" class="row justify-content-md-center" id="button_bar">
 
             <button type="button" 
                 class="col-md-4 justify-content-md-center btn btn-primary"
-                onclick="generate_array()">
+                onclick="generate_array()"
+                id="GenerateArray_button">
                 Generate New Array
             </button>
 
             <button type="button" 
                 class="col-md-4 justify-content-md-center btn btn-success"
-                onclick="trigger_QuickSort()">
+                onclick="trigger_QuickSort()"
+                id="QuickSort_button">
                 Quick Sort
             </button>
 
             <button type="button" 
                 class="col-md-4 justify-content-md-center btn btn-warning"
-                onclick="trigger_MergeSort()">
+                onclick="trigger_MergeSort()"
+                id="MergeSort_button">
                 Merge Sort
             </button>
                 
@@ -47,6 +46,12 @@
 
         
         <input type="range" class="custom-range" min="2" max="1000" step="1" id="customRange3", oninput="update_num_elements(this.value)">
+
+        <div id="sketch" class="row justify-content-md-center">
+            <div id="sketch" class="col-md-12">
+                <script src="sorting_algo.js"></script>
+            </div>
+        </div>
 
     </body>
     

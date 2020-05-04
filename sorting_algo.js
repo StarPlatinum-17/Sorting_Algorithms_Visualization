@@ -5,6 +5,10 @@ const QS_LESS = '#E5FF24';
 const QS_MORE = '#6CFF33';
 const SORTED_FILL = '#BFB7BF';
 
+const generate_array_button = document.getElementById("GenerateArray_button");
+const QS_button = document.getElementById("QuickSort_button");
+const MS_button = document.getElementById("MergeSort_button");
+
 const BEAT_MS = 10;
 
 const CANVAS_LENGTH = 1201;
@@ -19,6 +23,7 @@ class VisualizedArray extends Array {
 
         this.states = Array(num_elements).fill(0);
         this.delay = 0;
+        this.max_delay =500;
     }
 
     isEmpty() {
@@ -62,7 +67,8 @@ class VisualizedArray extends Array {
 
     set_delay(){
         let tmp = this.length;
-        this.delay = floor(50000/(tmp*Math.log2(tmp)));
+        let calc_delay = floor(50000/(tmp*Math.log2(tmp)))
+        this.delay = min(calc_delay,this.max_delay);
     }
     
 
@@ -81,8 +87,8 @@ function setup(){
 
 
 function draw(){
+
     background(BACKGROUND_FILL);
-    
 
     let elements = _visualized_array;
     let states = _visualized_array.states;
@@ -115,16 +121,28 @@ function draw(){
 }
 
 //buttons
-function trigger_QuickSort(){
-    QuickSort(_visualized_array,0,_visualized_array.length-1);
+function disable_sort_buttons(state = false){
+    QS_button.disabled = state;
+    MS_button.disabled = state;
 }
 
-function trigger_MergeSort(){
-    MergeSort(_visualized_array,0,_visualized_array.length-1);
+async function trigger_QuickSort(){
+    disable_sort_buttons(true);
+    await QuickSort(_visualized_array,0,_visualized_array.length-1);
+    console.log('finish_QS');
+    disable_sort_buttons(false);
+}
+
+async function trigger_MergeSort(){
+    disable_sort_buttons(true);
+    await MergeSort(_visualized_array,0,_visualized_array.length-1);
+    console.log('finish_MS');
+    disable_sort_buttons(false);
 }
 
 async function update_num_elements(new_value){
     _visualized_array.set_delay(0);
+    
     await sleep(100);
     NUM_ELEMENTS = parseInt(new_value);
     
@@ -139,7 +157,8 @@ async function update_num_elements(new_value){
 
     }
     _visualized_array.set_delay();
-    
+
+    disable_sort_buttons(false);
 }
 
 
