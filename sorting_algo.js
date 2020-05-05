@@ -65,7 +65,12 @@ class VisualizedArray extends Array {
 
     }
 
-    set_delay(){
+    set_delay(ms){
+        this.delay=ms;
+
+    }
+
+    set_calc_delay(){
         let tmp = this.length;
         let calc_delay = floor(50000/(tmp*Math.log2(tmp)))
         this.delay = min(calc_delay,this.max_delay);
@@ -141,22 +146,24 @@ async function trigger_MergeSort(){
 }
 
 async function update_num_elements(new_value){
+    let tmp_visualized = _visualized_array;
+
     _visualized_array.set_delay(0);
     
-    await sleep(100);
+
     NUM_ELEMENTS = parseInt(new_value);
     
     if(new_value <= _visualized_array.length){
-        _visualized_array = _visualized_array.splice(0,new_value);
+        _visualized_array = tmp_visualized.splice(0,new_value);
 
     } else{
-        var old_value = _visualized_array.length;
+        var old_value = tmp_visualized.length;
 
-        _visualized_array = _visualized_array.splice(0,old_value);
+        _visualized_array = tmp_visualized.splice(0,old_value);
         _visualized_array.fill_random(old_value,new_value,CANVAS_HEIGHT);
 
     }
-    _visualized_array.set_delay();
+    _visualized_array.set_calc_delay();
 
     disable_sort_buttons(false);
 }
@@ -165,11 +172,11 @@ async function update_num_elements(new_value){
 //Functionality
 function generate_array(num_elements = NUM_ELEMENTS, max_value = CANVAS_HEIGHT){
     
-    _visualized_array.delay = 0;
+    _visualized_array.set_delay(0);
     _visualized_array = new VisualizedArray(num_elements);
 
     _visualized_array.fill_random(0,_visualized_array.length, max_value);
-    _visualized_array.set_delay();
+    _visualized_array.set_calc_delay();
 }
 
 function verify_sorted(arr) {
